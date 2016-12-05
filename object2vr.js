@@ -38,11 +38,6 @@
 	var loadedScripts = 0;
 	
 	/**
-	 * handle events
-	 */
-	jQuery('.zoombox').on('mousedown', '.thumbs a', function(event){ switchImages(event.target); });
-	
-	/**
 	 * bootstraps and loads the object2vr
 	 */
 	function bootstrap(options) {
@@ -53,7 +48,6 @@
 			locationBase += '/';
 		}
 		
-		prepareImageSwitching();
 		prepareContainer();
 		
 		jQuery.getScript(locationBase + 'object2vr_player.js', load);
@@ -61,10 +55,13 @@
 	}
 	
 	/**
-	 * finds the first photo in the gallery as that one needs special treatment
+	 * binds on gallery switching to hide/re-show the 360 photo
 	 */
 	function prepareImageSwitching() {
+		// find the first photo in the gallery as that one needs special treatment
 		firstPhoto = jQuery('.zoombox .thumbs > *:first img')[0]
+		
+		jQuery('.zoombox').on('mousedown', '.thumbs a', function(event){ switchImages(event.target); });
 	}
 	
 	/**
@@ -101,7 +98,10 @@
 			var skin   = new object2vrSkin(player, locationBase);
 			player.readConfigUrl(locationBase + 'TDMS_out.xml');
 		}, function(){
+			prepareImageSwitching();
 			container.css('display', 'block');
+		}, function(){
+			container.remove();
 		});
 	}
 	
@@ -118,7 +118,7 @@
 	 * execute code which might trigger alerts and catch those
 	 * executes the successCallback only if no alerts were triggered
 	 */
-	function catchAlerts(executeCallback, successCallback) {
+	function catchAlerts(executeCallback, successCallback, failureCallback) {
 		var alertErrors = [];
 		var originalAlertFunction = window.alert;
 		window.alert = function(message) {
@@ -131,6 +131,9 @@
 		
 		if (alertErrors.length == 0) {
 			successCallback();
+		}
+		else {
+			failureCallback();
 		}
 	}
 })(jQuery);
