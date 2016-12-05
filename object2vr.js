@@ -15,12 +15,12 @@
 	 */
 	window.object2vr = function(options) {
 		if (options.length < 1 || options.locationBase == undefined || options.mimicElement == undefined) {
-			console.notice('object2vr: missing options, provide locationBase and mimicElement');
+			console.info('object2vr: missing options, provide locationBase and mimicElement');
 			return;
 		}
 		
 		if (options.mimicElement.length < 1) {
-			console.notice('object2vr: can\'t find mimicElement, note it should be a jQuery object');
+			console.info('object2vr: can\'t find mimicElement, note it should be a jQuery object');
 			return;
 		}
 		
