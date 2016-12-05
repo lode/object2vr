@@ -49,11 +49,15 @@
 		locationBase = options.locationBase;
 		mimicElement = options.mimicElement;
 		
+		if (locationBase.substr(-1) !== '/') {
+			locationBase += '/';
+		}
+		
 		prepareImageSwitching();
 		prepareContainer();
 		
-		jQuery.getScript(locationBase + '/object2vr_player.js', load);
-		jQuery.getScript(locationBase + '/skin.js', load);
+		jQuery.getScript(locationBase + 'object2vr_player.js', load);
+		jQuery.getScript(locationBase + 'skin.js', load);
 	}
 	
 	/**
