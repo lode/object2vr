@@ -94,11 +94,15 @@
 			return;
 		}
 		
-		var player = new object2vrPlayer(container.attr('id'));
-		var skin   = new object2vrSkin(player, locationBase);
-		player.readConfigUrl(locationBase + 'TDMS_out.xml');
-		
-		container.css('display', 'block');
+		// sanity check in case the xml can not be found
+		// this should not happen as the player and skin js files did succesfully load by now
+		catchAlerts(function(){
+			var player = new object2vrPlayer(container.attr('id'));
+			var skin   = new object2vrSkin(player, locationBase);
+			player.readConfigUrl(locationBase + 'TDMS_out.xml');
+		}, function(){
+			container.css('display', 'block');
+		});
 	}
 	
 	/**
@@ -109,4 +113,24 @@
 		var newDisplay = (clickedImage == firstPhoto) ? 'block' : 'none';
 		container.css('display', newDisplay);
 	};
+	
+	/**
+	 * execute code which might trigger alerts and catch those
+	 * executes the successCallback only if no alerts were triggered
+	 */
+	function catchAlerts(executeCallback, successCallback) {
+		var alertErrors = [];
+		var originalAlertFunction = window.alert;
+		window.alert = function(message) {
+			alertErrors.push(message);
+		};
+		
+		executeCallback();
+		
+		window.alert = originalAlertFunction;
+		
+		if (alertErrors.length == 0) {
+			successCallback();
+		}
+	}
 })(jQuery);
